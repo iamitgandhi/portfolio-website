@@ -1,10 +1,10 @@
 # Personal Portfolio Website
 
-A modern, high-performance portfolio website built with **Astro**, **Tailwind CSS**, and **Three.js WebGL**.
+A modern, high-performance portfolio website built with **Astro**, **Tailwind CSS**, and **Three.js WebGL**, deployed globally on **Cloudflare Pages**.
 
 [![Live Preview](https://img.shields.io/badge/Live_Website-www.amitkumargandhi.com-00C853?style=for-the-badge&logo=googlechrome&logoColor=white)](https://www.amitkumargandhi.com/)
 [![Astro](https://img.shields.io/badge/Astro_v7-BC52EE?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build)
-[![Hostinger](https://img.shields.io/badge/Hosted_on-Hostinger-673DE6?style=for-the-badge&logo=hostinger&logoColor=white)](https://www.hostinger.com/)
+[![Cloudflare Pages](https://img.shields.io/badge/Deployed_on-Cloudflare_Pages-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://pages.cloudflare.com/)
 
 ---
 
@@ -18,12 +18,13 @@ A modern, high-performance portfolio website built with **Astro**, **Tailwind CS
 
 ## ⚡ Technical Features & Architecture
 
-* **Astro Static Site Generation (SSG):** Built with Astro 7 for ultra-fast, zero-JS-by-default static HTML rendering and minimal asset payload.
-* **Interactive 3D WebGL Shader:** Custom Three.js fragment shader with real-time cursor-following chromatic aberration and RGB displacement effects. Features screen-width viewport detection to automatically bypass 3D rendering on mobile devices (< 1024px) for optimal mobile battery life and speed.
+* **Astro Static Site Generation (SSG):** Built with Astro 7 for ultra-fast, zero-JS-by-default static HTML rendering with zero runtime server overhead.
+* **Global Edge CDN Delivery:** Distributed worldwide across Cloudflare's edge network with custom cache and security headers via `public/_headers`.
+* **Interactive 3D WebGL Shader:** Custom Three.js fragment shader with real-time cursor-following chromatic aberration and RGB displacement effects. Features screen-width viewport detection to dynamically load 3D libraries only on desktop devices (≥ 1024px) for peak mobile PageSpeed scores.
 * **Reflow-Free Background Grid:** High-performance canvas grid background using document-relative scroll offset range caching instead of layout-thrashing DOM queries, maintaining `~0ms` Total Blocking Time (TBT).
-* **Preloaded LCP Assets:** Optimized image loading via `<link rel="preload" as="image" fetchpriority="high">` tag in `<head>` for rapid Largest Contentful Paint.
-* **Analytics & Privacy Integration:** Integrated Google Analytics (`gtag.js`) and SecurePrivacy cookie consent manager.
-* **Production Express Server:** Embedded lightweight `server.mjs` Node.js Express server configured with long-term static asset caching headers.
+* **Preloaded LCP Assets:** Optimized WebP hero image with `fetchpriority="high"` and `<link rel="preload">` in `<head>` for near-instant Largest Contentful Paint.
+* **Analytics & Privacy:** Integrated Google Analytics (`gtag.js`) and asynchronous SecurePrivacy cookie consent manager.
+* **Domain Email Infrastructure:** Native Cloudflare Email Routing for inbound mail with Brevo SMTP relay for authenticated outbound sending.
 
 ---
 
@@ -41,18 +42,19 @@ A modern, high-performance portfolio website built with **Astro**, **Tailwind CS
 ![Three.js](https://img.shields.io/badge/Three.js_WebGL-000000?style=for-the-badge&logo=three.js&logoColor=white)
 ![GSAP](https://img.shields.io/badge/GSAP_Animations-88CE02?style=for-the-badge&logo=greensock&logoColor=white)
 
-### Server & Infrastructure
-![Node.js](https://img.shields.io/badge/Node.js_v22.x-43853D?style=for-the-badge&logo=node.js&logoColor=white)
-![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
-![Hostinger](https://img.shields.io/badge/Hostinger_Web_App-673DE6?style=for-the-badge&logo=hostinger&logoColor=white)
+### Cloud & Infrastructure
+![Cloudflare Pages](https://img.shields.io/badge/Cloudflare_Pages-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)
+![Cloudflare DNS](https://img.shields.io/badge/Cloudflare_DNS-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)
+![Brevo](https://img.shields.io/badge/Brevo_SMTP-0B996F?style=for-the-badge&logo=brevo&logoColor=white)
 
 ---
 
 ## 📁 Repository Structure
 
 ```
-├── public/                     # Static assets (images, favicon, resume PDF, htaccess)
-│   ├── AmitG.webp              # Optimized profile WebP
+├── public/                     # Static assets (images, favicon, resume PDF, headers)
+│   ├── _headers                # Cloudflare Pages HTTP security & cache headers
+│   ├── AmitG.webp              # Compressed, optimized profile WebP
 │   ├── Amit Kumar Gandhi - Resume.pdf # Portfolio resume file
 │   └── preview.png             # Website preview screenshot
 ├── src/
@@ -67,7 +69,7 @@ A modern, high-performance portfolio website built with **Astro**, **Tailwind CS
 │   ├── pages/                  # Page entry points (index.astro, 404.astro, robots.txt.ts)
 │   └── styles/                 # Global CSS styles & Tailwind directives
 ├── astro.config.mjs            # Astro configuration
-├── server.mjs                  # Production Node.js Express server
+├── .npmrc                      # CI package management configuration
 └── package.json                # Dependencies and build scripts
 ```
 
@@ -76,7 +78,7 @@ A modern, high-performance portfolio website built with **Astro**, **Tailwind CS
 ## 💻 Local Development Setup
 
 ### Prerequisites
-* **Node.js:** `>= 22.12.0`
+* **Node.js:** `>= 20.0.0`
 * **Package Manager:** `npm`
 
 ### Commands
@@ -98,7 +100,7 @@ npm run check
 # 5. Build for production
 npm run build
 
-# 6. Preview production build via Express server
+# 6. Preview production build locally
 npm start
 ```
 
@@ -106,22 +108,18 @@ Local dev server runs on `http://localhost:4321`.
 
 ---
 
-## ☁️ Hostinger Node.js Web App Deployment
+## ☁️ Cloudflare Pages Deployment
 
-This website is deployed as a **Node.js Web App** on Hostinger:
+This website is automatically built and deployed via **Cloudflare Pages** connected to this repository:
 
-1. **Connect Repository:** In Hostinger hPanel ➔ **Node.js Web App** ➔ connect `iamitgandhi/portfolio-website`.
-2. **Build Configuration:**
-   * **Framework preset:** `Express`
-   * **Node version:** `22.x`
-   * **Root directory:** `./`
-   * **Package manager:** `npm`
-   * **Entry file:** `server.mjs`
-3. **Build & Start Commands:**
-   * **Build Command:** `npm install && npm run build`
-   * **Start Command:** `npm start`
+1. **Framework Preset:** `Astro`
+2. **Build Command:** `npm run build`
+3. **Build Output Directory:** `dist`
 4. **Environment Variables:**
+   * `NODE_VERSION=22`
    * `SITE_URL=https://www.amitkumargandhi.com`
+
+Continuous deployment triggers automatically on every push to the `main` branch.
 
 ---
 
